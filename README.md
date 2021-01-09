@@ -7,7 +7,7 @@
   - [풀이 1](https://husk321.tistory.com/83)  [풀이 2](https://husk321.tistory.com/84)  [풀이 3](https://husk321.tistory.com/85)  [풀이 4](https://husk321.tistory.com/86) 
 
   - 큰 어려움 없이 가능했던 과정
-  - 1학년때는 어렵게 느낀걸 잘 할 수 있음에 자심감이 생김
+  - 1학년때는 어렵게 느낀걸 잘 할 수 있음에 자신감이 생김
 
 - 정렬 : 2020.12.28 ~ 2020.12.31
 
