@@ -10,5 +10,4 @@ int main(){
             arr[i] = max(arr[i], arr[i-k]+s);
     }
     printf("%d\n", arr[t]);
-
 }
