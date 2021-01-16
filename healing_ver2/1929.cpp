@@ -2,8 +2,8 @@
 using namespace std;
 
 int main(){
-    int start, end, arr[1000001];
-    arr[0] = -1;
+    int start, end;
+    int arr[1000001];
     arr[1] = -1;
 
     cin >> start >> end;
@@ -15,6 +15,6 @@ int main(){
 
     for(int k = start; k <= end; k++){
         if(arr[k] != -1)
-            cout << arr[k] <<'\n';
+            cout << k <<'\n';
     }
 } 
