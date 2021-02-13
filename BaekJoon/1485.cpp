@@ -29,7 +29,6 @@ int main(){
             }
         }
         sort(arr, arr+6);
-        cout << ((arr[0] == arr[1] == arr[2] == arr[3]) && (arr[4] == arr[5])) << '\n';
+        cout << ((arr[0] == arr[1]) && (arr[0] == arr[2]) && (arr[0] == arr[3]) && (arr[4] == arr[5])) << '\n';
     }
-
 }
