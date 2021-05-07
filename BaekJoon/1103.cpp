@@ -31,7 +31,6 @@ int search(int x, int y){
     visit[x][y] = true;
     ans[x][y] = 0;
     for(int i = 0; i < 4; i++){
-        
         int nextX = x + (arr[x][y] * goX[i]);
         int nextY = y + (arr[x][y] * goY[i]);
         // for문의 4방향중 제일 오래할 수 있는 값을 선택
