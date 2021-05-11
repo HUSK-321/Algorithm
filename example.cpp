@@ -1,54 +1,78 @@
+#include <cstdio>
 #include <iostream>
 #include <queue>
 #include <vector>
-#define max 100001
+
 using namespace std;
-bool visit[max];
-int history[max];
-vector<int> result;
 
-int bfs(int n, int k){
-    queue<pair<int, int> > q;
-    q.push(make_pair(n, 0));
-    visit[n] = true;
 
-    while(!q.empty()){
-        int cur = q.front().first;
-        int count = q.front().second;
-        q.pop();
+int map[125][125];
+int dist[125][125];
+int x[4] = {1, -1, 0, 0};
+int y[4] = {0, 0, 1, -1};
 
-        if(cur == n){    // 완료조건
-            int temp = cur;
-            while(temp != n){
-                result.push_back(temp);
-                temp = history[temp];
+priority_queue <pair<int, pair<int, int>>> pq;     // <cost, <x, y>>
+
+int main(void){
+    int n;
+    int test = 0;
+    int here_x, here_y, cost;
+    int there_x, there_y, there_cost;
+    
+    while(1){
+        test++;
+        scanf("%d", &n);
+        if(n == 0)
+            return 0;
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                dist[i][j] = -1;
+                
             }
-            return count;
         }
-        // 탐색
-        if(cur+1 < max && !visit[cur+1]){
-            q.push(make_pair(cur+1, count+1));
-            visit[cur+1] = true;
-            history[cur+1] = cur;
+            
+        
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                scanf("%d", &map[i][j]);
+            }
         }
-        if(cur-1 < max && !visit[cur-1]){
-            q.push(make_pair(cur-1, count+1));
-            visit[cur-1] = true;
-            history[cur-1] = cur;
+        
+        dist[0][0] = map[0][0];
+        pq.push(make_pair(-map[0][0],make_pair(0, 0)));
+        
+        while(!pq.empty()){
+            here_x = pq.top().second.first;
+            here_y = pq.top().second.second;
+            cost = -pq.top().first;
+            
+            pq.pop();
+                    
+            if(dist[here_x][here_y] < cost)
+                continue;
+            
+            for(int i=0; i<4; i++){
+                there_x = here_x + x[i];
+                there_y = here_y + y[i];
+                there_cost = cost + map[there_x][there_y];
+                
+                if(there_x < 0 || there_x >=n || there_y < 0 || there_y >=n)
+                    continue;
+                
+                if(dist[there_x][there_y] == -1){
+                    dist[there_x][there_y] = there_cost;
+                    
+                    pq.push(make_pair(-there_cost, make_pair(there_x, there_y)));
+                }
+                else if(there_cost < dist[there_x][there_y]){
+                    dist[there_x][there_y] = there_cost;
+                    pq.push(make_pair(-there_cost, make_pair(there_x, there_y)));
+                }
+                    
+            }
+                    
         }
-        if(cur*2 < max && !visit[cur*2]){
-            q.push(make_pair(cur*2, count+1));
-            visit[cur*2] = true;
-            history[cur*2] = cur;
-        }
+        printf("Problem %d: %d\n", test, dist[n-1][n-1]);
     }
-}
-
-int main(){
-    int n, k;
-    cin >> n >> k;
-    cout << bfs(n, k) << '\n';
-    for(int i = result.size() - 1; i >= 0; i--)
-        cout << result[i] << " ";
-    cout << n << '\n';
+    
 }
