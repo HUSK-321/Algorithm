@@ -1,78 +1,109 @@
-#include <cstdio>
 #include <iostream>
 #include <queue>
-#include <vector>
 
 using namespace std;
 
+int r, c;
+int curX, curY, curT, nextX, nextY;
+char arr[1000][1000];
+int fire[1000][1000];
+bool visit[1000][1000];
+queue<pair<int,int> > fireQ;
+pair<int, int> Ji, Firestart;
 
-int map[125][125];
-int dist[125][125];
-int x[4] = {1, -1, 0, 0};
-int y[4] = {0, 0, 1, -1};
+int goX[4] = { 0, 0, 1, -1 };
+int goY[4] = { 1, -1, 0, 0 };
 
-priority_queue <pair<int, pair<int, int>>> pq;     // <cost, <x, y>>
+int Jihoon(){
+    queue<pair<pair<int, int>, int> >  q;    // x, y, 시간
+    q.push(make_pair(make_pair(Ji.first, Ji.second), 0));
+    visit[Ji.first][Ji.second] = true;
 
-int main(void){
-    int n;
-    int test = 0;
-    int here_x, here_y, cost;
-    int there_x, there_y, there_cost;
-    
-    while(1){
-        test++;
-        scanf("%d", &n);
-        if(n == 0)
-            return 0;
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
-                dist[i][j] = -1;
-                
-            }
-        }
-            
-        
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
-                scanf("%d", &map[i][j]);
-            }
-        }
-        
-        dist[0][0] = map[0][0];
-        pq.push(make_pair(-map[0][0],make_pair(0, 0)));
-        
-        while(!pq.empty()){
-            here_x = pq.top().second.first;
-            here_y = pq.top().second.second;
-            cost = -pq.top().first;
-            
-            pq.pop();
-                    
-            if(dist[here_x][here_y] < cost)
-                continue;
-            
-            for(int i=0; i<4; i++){
-                there_x = here_x + x[i];
-                there_y = here_y + y[i];
-                there_cost = cost + map[there_x][there_y];
-                
-                if(there_x < 0 || there_x >=n || there_y < 0 || there_y >=n)
-                    continue;
-                
-                if(dist[there_x][there_y] == -1){
-                    dist[there_x][there_y] = there_cost;
-                    
-                    pq.push(make_pair(-there_cost, make_pair(there_x, there_y)));
+    while (!q.empty()){
+        curX = q.front().first.first;
+        curY = q.front().first.second;
+        curT = q.front().second;
+        q.pop();
+        visit[curX][curY] = true;
+        if(curX == 0 || curX == r -1 || curY == 0 || curY == c -1)
+            return curT + 1;
+
+        for(int i = 0; i < 4; i++){
+            nextX = curX + goX[i];
+            nextY = curY + goY[i];
+
+            if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c) {
+                if(arr[nextX][nextY] != '#' && !visit[nextX][nextY]){
+                    if(fire[nextX][nextY] > curT + 1){
+                        q.push(make_pair(make_pair(nextX, nextY), curT + 1));
+                    }
                 }
-                else if(there_cost < dist[there_x][there_y]){
-                    dist[there_x][there_y] = there_cost;
-                    pq.push(make_pair(-there_cost, make_pair(there_x, there_y)));
-                }
-                    
             }
-                    
         }
-        printf("Problem %d: %d\n", test, dist[n-1][n-1]);
     }
-    
+    return -100;
+}
+
+void Firemap(){
+
+    while(!fireQ.empty()){
+        for(int i = 0; i < fireQ.size(); i++){
+            curX = fireQ.front().first;
+            curY = fireQ.front().second;
+            fireQ.pop();
+
+            for(int j = 0; j < 4; j++){
+                nextX = curX + goX[j];
+                nextY = curY + goY[j];
+
+                if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c){
+                    if(arr[nextX][nextY] != '#'){
+                        if(fire[nextX][nextY] > fire[curX][curY] + 1){
+                            fire[nextX][nextY] = fire[curX][curY] + 1;
+                            fireQ.push(make_pair(nextX, nextY));
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// . : 지나갈 수 있음
+// # : 벽 , J : 첫 위치, F : 불
+int main(){
+    // 입력
+    cin >> r >> c;
+    for(int i = 0; i < r; i++){
+        for(int j = 0; j < c; j++){
+            bool isF = false;
+            cin >> arr[i][j];
+
+            if(arr[i][j] == 'J'){
+                Ji.first = i;
+                Ji.second = j;
+            }
+
+            if(arr[j][j] == 'F'){
+                fireQ.push(make_pair(i, j));
+                fire[i][j] = 0;
+                isF = true;
+            }
+
+            if(!isF)
+                fire[i][j] = 1000000000;
+
+        }
+    }
+
+    // 불 지형 만들기
+    Firemap();
+
+    // 사람 이동, 출력
+    int res = Jihoon();
+
+    if(res == -100)
+        cout << "IMPOSSIBLE" << "\n";
+    else
+        cout << res << "\n";
 }

@@ -4,11 +4,12 @@
 using namespace std;
 
 int r, c;
-char arr[1001][1001];
-int fire[1001][1001];
-bool visit[1001][1001];
+int curX, curY, curT, nextX, nextY;
+char arr[1000][1000];
+int fire[1000][1000];
+bool visit[1000][1000];
 queue<pair<int,int> > fireQ;
-pair<int, int> Ji, Fire;
+pair<int, int> Ji, Firestart;
 
 int goX[4] = { 0, 0, 1, -1 };
 int goY[4] = { 1, -1, 0, 0 };
@@ -19,23 +20,22 @@ int Jihoon(){
     visit[Ji.first][Ji.second] = true;
 
     while (!q.empty()){
-        int x = q.front().first.first;
-        int y = q.front().first.second;
-        int curT = q.front().second;
+        curX = q.front().first.first;
+        curY = q.front().first.second;
+        curT = q.front().second;
         q.pop();
-
-        if(x == 0 || x == r -1 || y == 0 || y == c -1)
+        visit[curX][curY] = true;
+        if(curX == 0 || curX == r -1 || curY == 0 || curY == c -1)
             return curT + 1;
 
         for(int i = 0; i < 4; i++){
-            int nextX = x + goX[i];
-            int nextY = y + goY[i];
+            nextX = curX + goX[i];
+            nextY = curY + goY[i];
 
             if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c) {
-                if(arr[nextX][nextY] != '#' && visit[nextX][nextY] == false){
+                if(arr[nextX][nextY] != '#' && !visit[nextX][nextY]){
                     if(fire[nextX][nextY] > curT + 1){
                         q.push(make_pair(make_pair(nextX, nextY), curT + 1));
-                        visit[nextX][nextY] = true;
                     }
                 }
             }
@@ -45,17 +45,16 @@ int Jihoon(){
 }
 
 void Firemap(){
-    fireQ.push(make_pair(Fire.first, Fire.second));
 
     while(!fireQ.empty()){
         for(int i = 0; i < fireQ.size(); i++){
-            int curX = fireQ.front().first;
-            int curY = fireQ.front().second;
+            curX = fireQ.front().first;
+            curY = fireQ.front().second;
             fireQ.pop();
 
             for(int j = 0; j < 4; j++){
-                int nextX = curX + goX[j];
-                int nextY = curY + goY[j];
+                nextX = curX + goX[j];
+                nextY = curY + goY[j];
 
                 if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c){
                     if(arr[nextX][nextY] != '#'){
@@ -74,11 +73,11 @@ void Firemap(){
 // # : 벽 , J : 첫 위치, F : 불
 int main(){
     // 입력
-    scanf("%d %d", &r, &c);
+    cin >> r >> c;
     for(int i = 0; i < r; i++){
         for(int j = 0; j < c; j++){
             bool isF = false;
-            scanf("%c", &arr[i][j]);
+            cin >> arr[i][j];
 
             if(arr[i][j] == 'J'){
                 Ji.first = i;
@@ -86,8 +85,7 @@ int main(){
             }
 
             if(arr[j][j] == 'F'){
-                Fire.first = i;
-                Fire.second = j;
+                fireQ.push(make_pair(i, j));
                 fire[i][j] = 0;
                 isF = true;
             }
@@ -105,7 +103,7 @@ int main(){
     int res = Jihoon();
 
     if(res == -100)
-        printf("IMPOSSIBLE\n");
+        cout << "IMPOSSIBLE" << "\n";
     else
-        printf("%d\n", res);
+        cout << res << "\n";
 }
