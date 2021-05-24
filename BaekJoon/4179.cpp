@@ -1,66 +1,32 @@
 #include <iostream>
 #include <queue>
-
 using namespace std;
 
-int r, c;
-int curX, curY, curT, nextX, nextY;
-char arr[1000][1000];
+int r, c, jsx, jsy, ans;
+char map[1000][1000];
 int fire[1000][1000];
 bool visit[1000][1000];
-queue<pair<int,int> > fireQ;
-pair<int, int> Ji, Firestart;
-
 int goX[4] = { 0, 0, 1, -1 };
 int goY[4] = { 1, -1, 0, 0 };
-
-int Jihoon(){
-    queue<pair<pair<int, int>, int> >  q;    // x, y, 시간
-    q.push(make_pair(make_pair(Ji.first, Ji.second), 0));
-    visit[Ji.first][Ji.second] = true;
-
-    while (!q.empty()){
-        curX = q.front().first.first;
-        curY = q.front().first.second;
-        curT = q.front().second;
-        q.pop();
-        visit[curX][curY] = true;
-        if(curX == 0 || curX == r -1 || curY == 0 || curY == c -1)
-            return curT + 1;
-
-        for(int i = 0; i < 4; i++){
-            nextX = curX + goX[i];
-            nextY = curY + goY[i];
-
-            if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c) {
-                if(arr[nextX][nextY] != '#' && !visit[nextX][nextY]){
-                    if(fire[nextX][nextY] > curT + 1){
-                        q.push(make_pair(make_pair(nextX, nextY), curT + 1));
-                    }
-                }
-            }
-        }
-    }
-    return -100;
-}
+queue<pair<int, int>> fireq;
 
 void Firemap(){
-
-    while(!fireQ.empty()){
-        for(int i = 0; i < fireQ.size(); i++){
-            curX = fireQ.front().first;
-            curY = fireQ.front().second;
-            fireQ.pop();
+    while(!fireq.empty()){
+        int qsize = fireq.size();
+        for(int i = 0; i < qsize; i++){
+            int curX = fireq.front().first;
+            int curY = fireq.front().second;
+            fireq.pop();
 
             for(int j = 0; j < 4; j++){
-                nextX = curX + goX[j];
-                nextY = curY + goY[j];
+                int nextX = curX + goX[j];
+                int nextY = curY + goY[j];
 
                 if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c){
-                    if(arr[nextX][nextY] != '#'){
+                    if(map[nextX][nextY] != '#'){
                         if(fire[nextX][nextY] > fire[curX][curY] + 1){
                             fire[nextX][nextY] = fire[curX][curY] + 1;
-                            fireQ.push(make_pair(nextX, nextY));
+                            fireq.push(make_pair(nextX, nextY));
                         }
                     }
                 }
@@ -69,41 +35,65 @@ void Firemap(){
     }
 }
 
-// . : 지나갈 수 있음
-// # : 벽 , J : 첫 위치, F : 불
+int Jihoon(){
+    queue<pair<pair<int, int>, int>> q;
+    q.push(make_pair(make_pair(jsx, jsy), 0));
+    visit[jsx][jsy] = true;
+
+    while(!q.empty()){
+        int curX = q.front().first.first;
+        int curY = q.front().first.second;
+        int time = q.front().second;
+        q.pop();
+
+        if(curX == 0 || curX == r-1 || curY == 0 || curY == c-1)
+            return time + 1;
+
+        for(int i = 0; i < 4; i++){
+            int nextX = curX + goX[i];
+            int nextY = curY + goY[i];
+
+            if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c){
+                if(map[nextX][nextY] != '#' && visit[nextX][nextY] == false){
+                    if(fire[nextX][nextY] > time + 1){
+                        visit[nextX][nextY] = true;
+                        q.push(make_pair(make_pair(nextX, nextY), time+1));
+                    }
+                }
+            }
+        }
+    }
+    return -1;
+}
+
 int main(){
     // 입력
     cin >> r >> c;
     for(int i = 0; i < r; i++){
         for(int j = 0; j < c; j++){
-            bool isF = false;
-            cin >> arr[i][j];
+            cin >> map[i][j];
 
-            if(arr[i][j] == 'J'){
-                Ji.first = i;
-                Ji.second = j;
+            if(map[i][j] == 'J') {
+                jsx = i;
+                jsy = j;
             }
-
-            if(arr[j][j] == 'F'){
-                fireQ.push(make_pair(i, j));
+            else if(map[i][j] == 'F') {
+                fireq.push(make_pair(i, j));
                 fire[i][j] = 0;
-                isF = true;
-            }
-
-            if(!isF)
-                fire[i][j] = 1000000000;
-
+            } else
+                fire[i][j] = 999999999;
         }
     }
 
-    // 불 지형 만들기
+    // 불 시간 구하기
     Firemap();
 
-    // 사람 이동, 출력
-    int res = Jihoon();
+    // 지훈
+    ans = Jihoon();
 
-    if(res == -100)
-        cout << "IMPOSSIBLE" << "\n";
+    if(ans == -1)
+        cout << "IMPOSSIBLE" << '\n';
     else
-        cout << res << "\n";
+        cout << ans << '\n';
+    
 }
