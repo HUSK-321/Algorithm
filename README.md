@@ -1,7 +1,9 @@
 ## Algorithm Repository
 
+[![solved.ac tier](http://mazassumnida.wtf/api/generate_badge?boj=husk321)](https://solved.ac/husk321)
+
 - 사용 언어 : C++
-- 문제풀이 사이트 : [백준](https://www.acmicpc.net/)   ( [프로필](https://www.acmicpc.net/user/husk321) )
+- 문제풀이 사이트 : [백준](https://www.acmicpc.net/)   ( [프로필](https://www.acmicpc.net/user/husk321) )  [프로그래머스](https://programmers.co.kr/)
 - 가끔 좋은문제 풀이 올리는곳 : [벨로그](https://velog.io/@husk321)    [티스토리](https://husk321.tistory.com/)
 ----
 > 목표는 코딩테스트
