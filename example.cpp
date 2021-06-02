@@ -1,71 +1,32 @@
-#include<iostream>
-#include<queue>
- 
-#define endl "\n"
-#define MAX 1000
+#include <iostream>
+#include <queue>
 using namespace std;
- 
-int R, C;
-char MAP[MAX][MAX];
-int Fire_MAP[MAX][MAX];
-bool Visit[MAX][MAX];
- 
-pair<int, int> Start, Fire;
- 
-int dx[] = { 0, 0, 1, -1 };
-int dy[] = { 1, -1, 0, 0 };
- 
-queue<pair<int, int>> Fire_Q;
- 
-void Input()
-{
-    cin >> R >> C;
-    for (int i = 0; i < R; i++)
-    {
-        for (int j = 0; j < C; j++)
-        {
-            bool Fire = false;
-            cin >> MAP[i][j];
-            if (MAP[i][j] == 'J')
-            {
-                Start.first = i;
-                Start.second = j;
-            }
-            else if (MAP[i][j] == 'F')
-            {
-                Fire_Q.push(make_pair(i, j));
-                Fire_MAP[i][j] = 0;
-                Fire = true;
-            }
-            if(Fire == false) Fire_MAP[i][j] = 987654321;
-        }
-    }
-}
- 
-void Make_Fire_Map()
-{
-    while (Fire_Q.empty() == 0)
-    {
-        int Qs = Fire_Q.size();
-        for (int s = 0; s < Qs; s++)
-        {
-            int x = Fire_Q.front().first;
-            int y = Fire_Q.front().second;
-            Fire_Q.pop();
- 
-            for (int i = 0; i < 4; i++)
-            {
-                int nx = x + dx[i];
-                int ny = y + dy[i];
- 
-                if (nx >= 0 && ny >= 0 && nx < R && ny < C)
-                {
-                    if (MAP[nx][ny] != '#')
-                    {
-                        if (Fire_MAP[nx][ny] > Fire_MAP[x][y] + 1)
-                        {
-                            Fire_MAP[nx][ny] = Fire_MAP[x][y] + 1;
-                            Fire_Q.push(make_pair(nx, ny));
+
+int r, c, jsx, jsy, ans;
+char map[1000][1000];
+int fire[1000][1000];
+bool visit[1000][1000];
+int goX[4] = { 0, 0, 1, -1 };
+int goY[4] = { 1, -1, 0, 0 };
+queue<pair<int, int> > fireq;
+
+void Firemap(){
+    while(!fireq.empty()){
+        int qsize = fireq.size();
+        for(int i = 0; i < qsize; i++){
+            int curX = fireq.front().first;
+            int curY = fireq.front().second;
+            fireq.pop();
+
+            for(int j = 0; j < 4; j++){
+                int nextX = curX + goX[j];
+                int nextY = curY + goY[j];
+
+                if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c){
+                    if(map[nextX][nextY] != '#'){
+                        if(fire[nextX][nextY] > fire[curX][curY] + 1){
+                            fire[nextX][nextY] = fire[curX][curY] + 1;
+                            fireq.push(make_pair(nextX, nextY));
                         }
                     }
                 }
@@ -73,35 +34,30 @@ void Make_Fire_Map()
         }
     }
 }
- 
-int Move_Person(int a, int b)
-{
-    queue<pair<pair<int, int>, int>> Q;
-    Q.push(make_pair(make_pair(a, b), 0));
-    Visit[a][b] = true;
- 
-    while (Q.empty() == 0)
-    {
-        int x = Q.front().first.first;
-        int y = Q.front().first.second;
-        int Cnt = Q.front().second;
-        Q.pop();
- 
-        if (x == 0 || y == 0 || x == R - 1 || y == C - 1) return Cnt + 1;
- 
-        for (int i = 0; i < 4; i++)
-        {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
- 
-            if (nx >= 0 && ny >= 0 && nx < R && ny < C)
-            {
-                if (MAP[nx][ny] != '#' && Visit[nx][ny] == false)
-                {
-                    if (Fire_MAP[nx][ny] > Cnt + 1)
-                    {
-                        Visit[nx][ny] = true;
-                        Q.push(make_pair(make_pair(nx, ny), Cnt + 1));
+
+int Jihoon(){
+    queue<pair<pair<int, int>, int> > q;
+    q.push(make_pair(make_pair(jsx, jsy), 0));
+    visit[jsx][jsy] = true;
+
+    while(!q.empty()){
+        int curX = q.front().first.first;
+        int curY = q.front().first.second;
+        int time = q.front().second;
+        q.pop();
+
+        if(curX == 0 || curX == r-1 || curY == 0 || curY == c-1)
+            return time + 1;
+
+        for(int i = 0; i < 4; i++){
+            int nextX = curX + goX[i];
+            int nextY = curY + goY[i];
+
+            if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c){
+                if(map[nextX][nextY] != '#' && visit[nextX][nextY] == false){
+                    if(fire[nextX][nextY] > time + 1){
+                        visit[nextX][nextY] = true;
+                        q.push(make_pair(make_pair(nextX, nextY), time+1));
                     }
                 }
             }
@@ -109,29 +65,41 @@ int Move_Person(int a, int b)
     }
     return -1;
 }
- 
-void Solution()
-{
-    Make_Fire_Map();
-    int R = Move_Person(Start.first, Start.second);
-    if (R == -1) cout << "IMPOSSIBLE" << endl;
-    else cout << R << endl;
-}
- 
-void Solve()
-{
-    Input();
-    Solution();
-}
- 
-int main(void)
-{
-    ios::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
- 
-    //freopen("Input.txt", "r", stdin);
-    Solve();
- 
-    return 0;
+
+int main(){
+    int t;
+    cin >> t;
+    while (t--){
+        // 입력
+    cin >> r >> c;
+    for(int i = 0; i < r; i++){
+        for(int j = 0; j < c; j++){
+            cin >> map[i][j];
+
+            if(map[i][j] == '@') {
+                jsx = i;
+                jsy = j;
+            }
+            else if(map[i][j] == '*') {
+                fireq.push(make_pair(i, j));
+                fire[i][j] = 0;
+            } else
+                fire[i][j] = 999999999;
+        }
+    }
+
+    // 불 시간 구하기
+    Firemap();
+
+    // 지훈
+    ans = Jihoon();
+
+    if(ans == -1)
+        cout << "IMPOSSIBLE" << '\n';
+    else
+        cout << ans << '\n';
+    
+    }
+    
+    
 }
