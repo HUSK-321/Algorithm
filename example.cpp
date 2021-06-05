@@ -1,105 +1,71 @@
 #include <iostream>
 #include <queue>
+#include <vector>
+#include <cstring>
 using namespace std;
 
-int r, c, jsx, jsy, ans;
-char map[1000][1000];
-int fire[1000][1000];
-bool visit[1000][1000];
-int goX[4] = { 0, 0, 1, -1 };
-int goY[4] = { 1, -1, 0, 0 };
-queue<pair<int, int> > fireq;
+int n, m;
+int inputFrom, inputTo, inputCost;
+vector<pair<int, int> > road[1001];
+int city[1001];
+int route[1001];
+bool isEnemy[1001][1001];
 
-void Firemap(){
-    while(!fireq.empty()){
-        int qsize = fireq.size();
-        for(int i = 0; i < qsize; i++){
-            int curX = fireq.front().first;
-            int curY = fireq.front().second;
-            fireq.pop();
+void Djik(){
+    priority_queue<pair<int, int> > djikQ; // 비용, 지점 순
+    djikQ.push(make_pair(0, 1));
+    city[1] = 0;
 
-            for(int j = 0; j < 4; j++){
-                int nextX = curX + goX[j];
-                int nextY = curY + goY[j];
+    while(!djikQ.empty()) {
+        int cur = djikQ.top().second;
+        int curCost = -djikQ.top().first;
+        djikQ.pop();
 
-                if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c){
-                    if(map[nextX][nextY] != '#'){
-                        if(fire[nextX][nextY] > fire[curX][curY] + 1){
-                            fire[nextX][nextY] = fire[curX][curY] + 1;
-                            fireq.push(make_pair(nextX, nextY));
-                        }
-                    }
-                }
+        for(int i = 0; i < road[cur].size(); i++){
+            int nextCur = road[cur][i].first;
+            int nextCost = road[cur][i].second;
+
+            if(city[nextCur] > curCost + nextCost){
+                if(isEnemy[cur][nextCur])
+                    continue;
+                
+                route[nextCur] = cur;
+                city[nextCur] = curCost + nextCost;
+                djikQ.push(make_pair(-city[nextCur], nextCur));
             }
         }
     }
-}
-
-int Jihoon(){
-    queue<pair<pair<int, int>, int> > q;
-    q.push(make_pair(make_pair(jsx, jsy), 0));
-    visit[jsx][jsy] = true;
-
-    while(!q.empty()){
-        int curX = q.front().first.first;
-        int curY = q.front().first.second;
-        int time = q.front().second;
-        q.pop();
-
-        if(curX == 0 || curX == r-1 || curY == 0 || curY == c-1)
-            return time + 1;
-
-        for(int i = 0; i < 4; i++){
-            int nextX = curX + goX[i];
-            int nextY = curY + goY[i];
-
-            if(nextX >= 0 && nextX < r && nextY >= 0 && nextY < c){
-                if(map[nextX][nextY] != '#' && visit[nextX][nextY] == false){
-                    if(fire[nextX][nextY] > time + 1){
-                        visit[nextX][nextY] = true;
-                        q.push(make_pair(make_pair(nextX, nextY), time+1));
-                    }
-                }
-            }
-        }
-    }
-    return -1;
 }
 
 int main(){
-    int t;
-    cin >> t;
-    while (t--){
-        // 입력
-    cin >> r >> c;
-    for(int i = 0; i < r; i++){
-        for(int j = 0; j < c; j++){
-            cin >> map[i][j];
+    // 입력
+    cin >> n >> m;
+    for(int i = 1; i <= n; i++) city[i] = 999999999;
+    
 
-            if(map[i][j] == '@') {
-                jsx = i;
-                jsy = j;
-            }
-            else if(map[i][j] == '*') {
-                fireq.push(make_pair(i, j));
-                fire[i][j] = 0;
-            } else
-                fire[i][j] = 999999999;
-        }
+    while (m--){
+        cin >> inputFrom >> inputTo >> inputCost;
+        road[inputFrom].push_back(make_pair(inputTo, inputCost));
     }
 
-    // 불 시간 구하기
-    Firemap();
+    Djik();
 
-    // 지훈
-    ans = Jihoon();
-
-    if(ans == -1)
-        cout << "IMPOSSIBLE" << '\n';
-    else
-        cout << ans << '\n';
-    
+    // 경로를 담을 벡터 선언
+    vector<int> forPrint;
+    int temp = n;
+    while(temp) {
+        forPrint.push_back(temp);
+        isEnemy[route[temp]][temp];
+        temp = route[temp];
     }
-    
-    
+
+    // 출력 : 최소 비용, 경로에 있는 도시 수, 경로의 도시 순
+    for(int i = forPrint.size() - 1; i > 0; i--){
+        isEnemy[forPrint[i]][forPrint[i-1]] = true;
+    }
+
+    for(int i = 1; i <= n; i++) city[i] = 999999999;
+    Djik();
+
+    cout << city[n] << "\n";
 }
