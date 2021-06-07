@@ -20,6 +20,9 @@ void Djikstra(int start){
         int time = q.top().first;
         q.pop();
 
+        if(time > arr[cur])
+            continue;
+
         for(int i = 0; i < v[cur].size(); i++){
             int nextCur = v[cur][i].first;
             int nextTime = v[cur][i].second;
