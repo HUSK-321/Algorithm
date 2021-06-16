@@ -31,7 +31,7 @@ void Bellman(){
         cost = edge[i].second;
 
         if(node[from] == 999999999)
-                continue;
+            continue;
             
         if(node[to] > node[from] + cost){
             printf("-1\n");
