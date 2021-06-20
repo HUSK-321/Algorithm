@@ -1,6 +1,6 @@
 ## Algorithm Repository
 
-[![solved.ac tier](http://mazassumnida.wtf/api/generate_badge?boj=husk321)](https://solved.ac/husk321)
+[![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=husk321)](https://solved.ac/husk321/)
 
 - 사용 언어 : C++
 - 문제풀이 사이트 : [백준](https://www.acmicpc.net/)   ( [프로필](https://www.acmicpc.net/user/husk321) )  [프로그래머스](https://programmers.co.kr/)
@@ -12,3 +12,7 @@
 - BaekJoon : 백준 알고리즘 문제 풀이
 - Programmers : 프로그래머스 문제 풀이
 - EPIC : 서울과학기술대학교 비교과 알고리즘 
+
+----
+- 2021.01.01 시작
+- 2021.06.15 골드 1 
