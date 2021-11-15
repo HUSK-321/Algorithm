@@ -29,6 +29,9 @@ int main(){
         int curCost = -djikQ.top().first;
         djikQ.pop();
 
+        if(curCost > city[cur])
+            continue;
+
         for(int i = 0; i < road[cur].size(); i++){
             int nextCur = road[cur][i].first;
             int nextCost = road[cur][i].second;
