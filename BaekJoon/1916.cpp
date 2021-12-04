@@ -19,6 +19,9 @@ void Djik(){
         int curCost = -djikQ.top().first;
         djikQ.pop();
 
+        if(curCost > toIndexCityCost[cur])
+            continue;
+
         for(int i = 0; i < bus[cur].size(); i++){
             int nextCur = bus[cur][i].first;
             int nextCost = bus[cur][i].second;
