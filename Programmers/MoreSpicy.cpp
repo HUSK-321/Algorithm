@@ -14,16 +14,21 @@ int solution(vector<int> scoville, int K) {
     
     while(q.size() >= 2){
         int first = -q.top();   q.pop();
-        int second = -q.top();  q.pop();
 
+        if(first >= K)
+            return count;
+
+        int second = -q.top();  q.pop();
         int newScov = first + (second * 2);
         count++; 
-
-        if(newScov >= K)
-            return count;
 
         q.push(-newScov);
     }
     
+    if(-q.top() >= K)
+        return count;
     return -1;
 }
+
+// 16m - 95.2
+// 17m 30s
