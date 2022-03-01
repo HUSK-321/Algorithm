@@ -45,6 +45,7 @@
         "queue": "cpp",
         "xutility": "cpp",
         "xstring": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "bitset": "cpp"
     }
 }
