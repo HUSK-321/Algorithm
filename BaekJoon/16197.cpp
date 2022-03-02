@@ -44,6 +44,7 @@ void moveCoin(pair<int, int> coin1, pair<int, int> coin2, int moveCount, int dir
 
     // not answer
     if(is1Out && is2Out)    return;
+    if(is1Stuck && is2Stuck)    return;
 
     // only one coin out
     if(is1Out ^ is2Out){
