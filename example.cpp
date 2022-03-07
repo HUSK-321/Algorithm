@@ -1,21 +1,14 @@
-#include <stdlib.h>
-#include <memory>
+#include <vector>
 
-class Base{
-public:
-    static void * operator new(std::size_t size) throw(std::bad_alloc);
-    static void operator delete(void *rawMemory, std::size_t size) throw();
-    //...
-};
+std::pair<int, int> p;
 
-void Base::operator delete(void *rawMemory, std::size_t size) throw(){
-    if(rawMemory == 0)  return;
+int main(){
+    p = {1, 2};
 
-    if(size != sizeof(Base)){
-        ::operator delete(rawMemory);
-        return;
+    // if(p ==std::pair{1, 2}){
+    //     // C++ 17
+    // }
+    if(p == std::make_pair(1, 2)){
+        // C++ 14
     }
-
-    rawMemory 가 가리키는 메모리 비할당
-    return;
 }
