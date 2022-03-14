@@ -30,7 +30,6 @@ int main(){
     // DFS
     for(int i = 1; i <= n; i++){
         HaveCycle(i, i);
-        // TODO : 이거 bool 안되는듯?
         memset(visit, 0, sizeof(visit));
     }
 
