@@ -12,10 +12,10 @@ vector<int> solution(vector<int> answers) {
 
     int first = 0, second = 0, third = 0;
 
-    for(int i = 0; i < answer.size(); i++){
-        if(firstAnswer[i%5] == answer[i])   first++;
-        if(secondAnswer[i%8] == answer[i])  second++;
-        if(thirdAnswer[i%10] == answer[i])  third++;
+    for(int i = 0; i < answers.size(); i++){
+        if(firstAnswer[i%5] == answers[i])   first++;
+        if(secondAnswer[i%8] == answers[i])  second++;
+        if(thirdAnswer[i%10] == answers[i])  third++;
     }
 
     int highScore = max(first, max(second, third));
