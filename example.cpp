@@ -1,14 +1,7 @@
-#include <vector>
+#include <iostream>
 
-std::pair<int, int> p;
+using namespace std;
 
 int main(){
-    p = {1, 2};
-
-    // if(p ==std::pair{1, 2}){
-    //     // C++ 17
-    // }
-    if(p == std::make_pair(1, 2)){
-        // C++ 14
-    }
+    cout << 1000000 * 1000000 * 2LL << endl;
 }
