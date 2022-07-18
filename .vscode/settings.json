@@ -46,6 +46,7 @@
         "xutility": "cpp",
         "xstring": "cpp",
         "ios": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "complex": "cpp"
     }
 }
