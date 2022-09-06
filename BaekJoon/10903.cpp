@@ -1,36 +1,37 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <stack>
+#include <algorithm>
 #include <cmath>
+
 using namespace std;
 
 struct Point{
-    long long x, y;
-    bool operator < (const Point& b){
-        return (y == b.y) ? (x < b.x) : (y < b.y);
-    }
+    double x, y;
 };
+const auto PI = 3.1415926535;
+int n, r;
 
 vector<Point> points;
-stack<Point> hull;
-int n, l;
-const double PI = 3.1415926535;
-long long CCW(const Point& a, const Point& b, const Point& c){
-    return a.x*b.y + b.x*c.y + c.x*a.y - b.x*a.y - c.x*b.y - a.x*c.y;
+
+double GetCCW(const Point& a, const Point& b, const Point& c){
+    auto positive = a.x * b.y + b.x * c.y + c.x * a.y;
+    auto negative = b.x * a.y + c.x * b.y + a.x * c.y;
+    return positive - negative;
 }
 
-long long Distance(const Point& a, const Point& b){
-    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+bool CompareByYPos(const Point& a, const Point& b){
+    if(a.y == b.y)
+        return a.x < b.x;
+    return a.y < b.y;
 }
 
 bool CompareByCCW(const Point& a, const Point& b){
-    long long ccw = CCW(points[0], a, b);
+    auto ccw = GetCCW(points[0], a, b);
+    return ccw ? ccw > 0 : CompareByYPos(a, b);
+}
 
-    if(ccw == 0){
-        return Distance(points[0], a) < Distance(points[0], b);
-    }
-    return ccw > 0;
+double GetDistance(const Point& a, const Point& b){
+    return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
 }
 
 
@@ -41,44 +42,42 @@ int main(){
     cout.tie(0);
 
     // input
-    cin >> n >> l;
+    cin >> n >> r;
     points.resize(n);
     for(int i = 0; i < n; i++){
         cin >> points[i].x >> points[i].y;
     }
 
-    swap(points[0], *min_element(points.begin(), points.end()));
+    
+    // sort
+    vector<Point> hull;
+
+    sort(points.begin(), points.end(), CompareByYPos);
+    hull.push_back(points[0]);
     sort(points.begin() + 1, points.end(), CompareByCCW);
+    hull.push_back(points[1]);
 
-    hull.push(points[0]);
-    hull.push(points[1]);
-
+    // convex hull algorithm
     for(int i = 2; i < n; i++){
-        while(hull.size() >= 2){
-            Point first = hull.top();
-            hull.pop();
-            Point second = hull.top();
+        while (hull.size() >= 2){
+            Point first = hull.back();
+            hull.pop_back();
+            Point second = hull.back();
 
-            long long ccw = CCW(points[i], first, second);
-            if(ccw < 0){
-                hull.push(first);
+            double ccw = GetCCW(second, first, points[i]);
+            if(ccw > 0){
+                hull.push_back(first);
                 break;
             }
         }
-        hull.push(points[i]);
+        hull.push_back(points[i]);
     }
 
-    double answer = 0;
-    int hullSize = hull.size();
-    Point lastPoint(hull.top());
-    for(int i = 1; i < hullSize; i++){
-        Point point = hull.top();
-        hull.pop();
-        answer += Distance(point, hull.top());
-    }
-    answer += Distance(lastPoint, hull.top());
-    answer += PI * 2 * l;
+    hull.push_back(points[0]);
+    double answer = PI * 2 * r;
+    for(int i = 0; i < hull.size()-1; i++)
+        answer += GetDistance(hull[i], hull[i + 1]);
 
-    cout.precision(12);
+    cout.precision(14);
     cout << answer << '\n';
 }
