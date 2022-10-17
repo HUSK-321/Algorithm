@@ -1,27 +1,18 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
 using namespace std;
 
 int solution(vector<vector<int>> sizes) {
-    int answer = 0;
-    
-    int cardLongSide = 0, cardShortSide = 0;
-    const int cardsCount = sizes.size();
-    for(int i = 0; i < cardsCount; i++)
-    {
-        const int weight = sizes[i][0];
-        const int height = sizes[i][1];
-        if (weight > height)
-        {
-            cardLongSide = max(cardLongSide, weight);
-            cardShortSide = max(cardShortSide, height);
-            continue;
-        } 
-        cardLongSide = max(cardLongSide, height);
-        cardShortSide = max(cardShortSide, weight);
+    int longOfLongest = 0, shortOfLongest = 0;
+    for(int i = 0; i < sizes.size(); i++){
+        int longSide = max(sizes[i][0], sizes[i][1]);
+        int shortSide = min(sizes[i][0], sizes[i][1]);
+        
+        longOfLongest = max(longOfLongest, longSide);
+        shortOfLongest = max(shortOfLongest, shortSide);
     }
     
-    return answer = cardLongSide * cardShortSide;
+    
+    return longOfLongest * shortOfLongest;
 }
