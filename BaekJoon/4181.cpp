@@ -31,7 +31,11 @@ bool CompareByPos(const Point& a, const Point& b){
 
 bool CompareByCCW(const Point& a, const Point& b){
     auto ccw = GetCCW(points[0], a, b);
-    return ccw ? ccw > 0 : CompareByPos(a, b);
+
+    if(ccw)
+        return ccw > 0;
+    else
+        return a.y > b.y;
 }
 
 int main(){
@@ -45,7 +49,7 @@ int main(){
     for(int i = 0; i < n; i++){
         int x, y; char sign;
         cin >> x >> y >> sign;
-        if(sign == 'N') continue;
+        if(sign != 'Y') continue;
 
         points.push_back({x, y});
     }
@@ -64,7 +68,7 @@ int main(){
             hull.pop_back();
             Point second = hull.back();
 
-            double ccw = GetCCW(second, first, points[i]);
+            auto ccw = GetCCW(second, first, points[i]);
             if(ccw > 0){
                 hull.push_back(first);
                 break;
