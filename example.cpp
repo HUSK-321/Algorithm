@@ -16,5 +16,8 @@ public:
 };
 
 int main(){
-    A(1);
+    int x = 1;
+    int y{ move(x) };
+
+    cout << x << " , " << y << '\n';
 }
