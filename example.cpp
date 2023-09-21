@@ -1,65 +1,63 @@
 #include <iostream>
-#include <chrono>
-#include <string>
+#include <vector>
 using namespace std;
-
-string GenerateRandomString() {
-    static const char alphabet[] =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
-
-    string resultString;
-    resultString.reserve(1000000000);
-
-    for (int i = 0; i < 1000000000; ++i) {
-        resultString += alphabet[rand() % (sizeof(alphabet) - 1)];
-    }
-    
-    return resultString;
-}
-
-void BranchConverter(string& s)
-{
-    for(int i = 0; i < s.size(); i++)
-    {
-        if(s[i] >= 'a' && s[i] <= 'z')
-        {
-            s[i] -= 32;
-        }
-    }
-}
-
-void BranchlessConverter(string& s)
-{
-    for(int i = 0; i < s.size(); i++)
-    {
-        s[i] -= 32 * (s[i] >= 'a' && s[i] <= 'z');
-    }
-}
-
+ 
 int main()
 {
-    {
-        cout << "1. Convert with Branch\n";
-        string testString = GenerateRandomString();
-        auto start = chrono::system_clock::now();
+    vector<int> vec;
 
-        BranchConverter(testString);
+    cout << "===============\n";
 
-        auto end = chrono::system_clock::now();
-        auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
-        cout << duration.count() << "\n ============================\n";
-    }
+    cout << "vector size     : " << vec.size() << '\n';
+    cout << "vector capacity : " << vec.capacity() << '\n';
 
-    {
-        cout << "2. Convert with Branchless\n";
-        string testString = GenerateRandomString();
-        auto start = chrono::system_clock::now();
+    //...
+    vec.push_back(0);
+    //...
 
-        BranchlessConverter(testString);
+    cout << "===============\n";
 
-        auto end = chrono::system_clock::now();
-        auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
-        cout << duration.count() << "\n ============================\n";
-    }
+    cout << "vector size     : " << vec.size() << '\n';
+    cout << "vector capacity : " << vec.capacity() << '\n';
+
+    //...
+    for(int i = 0; i < 2; i++)
+        vec.push_back(0);
+    //...
+
+    cout << "===============\n";
+
+    cout << "vector size     : " << vec.size() << '\n';
+    cout << "vector capacity : " << vec.capacity() << '\n';
+
+    //...
+    for(int i = 0; i < 2; i++)
+        vec.push_back(0);
+    //...
+
+    cout << "===============\n";
+
+    cout << "vector size     : " << vec.size() << '\n';
+    cout << "vector capacity : " << vec.capacity() << '\n';
+
+    //...
+    for(int i = 0; i < 4; i++)
+        vec.push_back(0);
+    //...
+
+    cout << "===============\n";
+
+    cout << "vector size     : " << vec.size() << '\n';
+    cout << "vector capacity : " << vec.capacity() << '\n';
+
+        //...
+    for(int i = 0; i < 8; i++)
+        vec.push_back(0);
+    //...
+
+    cout << "===============\n";
+
+    cout << "vector size     : " << vec.size() << '\n';
+    cout << "vector capacity : " << vec.capacity() << '\n';
+
 }
